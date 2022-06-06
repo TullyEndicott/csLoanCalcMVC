@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using csLoanCalcMVC.Helpers;
 
 namespace csLoanCalcMVC.Controllers
 {
@@ -22,6 +23,7 @@ namespace csLoanCalcMVC.Controllers
         {
             return View();
         }
+        [HttpGet]
         public IActionResult App() 
         { 
             Loan loan = new();
@@ -34,7 +36,19 @@ namespace csLoanCalcMVC.Controllers
             loan.Term = 60;
 
             return View(loan); 
-        }   
+        } 
+        
+        [HttpPost]
+        [ValidateAntiForgeryTokenAttribute]
+        public IActionResult App(Loan loan) //Loan are values from form; loan are values to be returned
+        {
+            //Calculate loan and get the payments
+            var loanHelper = new LoanHelper();
+            
+            Loan newLoan = loanHelper.GetPayments(loan);    
+
+            return View(newLoan);
+        }
 
         public IActionResult Privacy()
         {
